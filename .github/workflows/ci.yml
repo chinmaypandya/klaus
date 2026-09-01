@@ -1,0 +1,65 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  shell:
+    name: shell
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: shellcheck
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
+          shellcheck -x bin/klaus install.sh lib/*.sh
+
+      - name: syntax
+        run: |
+          for f in bin/klaus install.sh lib/*.sh; do bash -n "$f"; done
+
+  frontmatter:
+    name: frontmatter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pyyaml
+      - name: validate skills and agents
+        run: python3 scripts/validate.py
+
+  install:
+    name: install
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - name: install into a scratch config dir
+        env:
+          CLAUDE_CONFIG_DIR: ${{ runner.temp }}/claude
+        run: |
+          ./bin/klaus install --copy
+          ./bin/klaus doctor
+          ./bin/klaus lang go
+      - name: scaffold a scratch repo
+        env:
+          CLAUDE_CONFIG_DIR: ${{ runner.temp }}/claude
+        run: |
+          mkdir -p "${{ runner.temp }}/repo" && cd "${{ runner.temp }}/repo"
+          git init -q .
+          "$GITHUB_WORKSPACE/bin/klaus" init
+          test -f docs/journal.md
+          test -f docs/specs/_templates/lld.md

@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+# klaus — a structured workflow for Claude Code, configured once per machine.
+# https://github.com/<you>/klaus
+
+set -euo pipefail
+
+_self="${BASH_SOURCE[0]}"
+while [ -L "$_self" ]; do
+  _dir="$(cd -P "$(dirname "$_self")" && pwd)"
+  _self="$(readlink "$_self")"
+  case "$_self" in /*) ;; *) _self="$_dir/$_self" ;; esac
+done
+LIB="$(cd -P "$(dirname "$_self")/../lib" && pwd)"
+
+# shellcheck source=lib/common.sh
+. "$LIB/common.sh"
+for f in "$LIB"/cmd_*.sh; do . "$f"; done
+
+usage() {
+  cat <<EOF
+${C_BLD}klaus${C_OFF} $KLAUS_VERSION — structured workflow for Claude Code
+
+${C_BLD}USAGE${C_OFF}
+  klaus <command> [options]
+
+${C_BLD}COMMANDS${C_OFF}
+  install [--link|--copy]   Write the global setup into ~/.claude
+  init [dir] [--force]      Scaffold docs/ artifacts in a repository
+  lang <language>           Add a standards file for a language
+  doctor                    Verify the installation
+  uninstall                 Remove installed files (backs them up first)
+  version                   Print the version
+
+${C_BLD}GLOBAL OPTIONS${C_OFF}
+  --dry-run                 Show what would happen, change nothing
+  -y, --yes                 Assume yes to prompts
+  -h, --help                This message
+
+${C_BLD}ENVIRONMENT${C_OFF}
+  CLAUDE_CONFIG_DIR         Override ~/.claude
+  NO_COLOR                  Disable colour output
+
+${C_BLD}TYPICAL FIRST RUN${C_OFF}
+  klaus install --link      # once per machine
+  cd ~/code/my-project
+  klaus init                # once per repo
+  claude                    # then /spec, /lld, /hld, /plan, /implement
+
+${C_BLD}THE WORKFLOW${C_OFF}
+  /spec <slug> <problem>    requirements: in / out / later scope, edge cases
+  /lld <slug>               entities → classes → DSA fit → traces
+  /hld <slug>               network, storage, concurrency, cache, security
+  /plan <slug>              ordered tasks, each with a definition of done
+  /implement <slug> <task>  one task, with docs and tests, then stops
+  /journal <what>           journal entry, plus a changie entry if configured
+  /conventions [language]   resolve, show or bootstrap a standards file
+  /ship [ci|release|both]   set up or review the GitHub Actions pipelines
+EOF
+}
+
+ASSUME_YES=0
+args=()
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --dry-run) DRY_RUN=1 ;;
+    -y|--yes)  ASSUME_YES=1 ;;
+    -h|--help) usage; exit 0 ;;
+    *) args+=("$1") ;;
+  esac
+  shift
+done
+export DRY_RUN ASSUME_YES
+
+set -- "${args[@]:-}"
+cmd="${1:-}"
+[ $# -gt 0 ] && shift || true
+
+case "$cmd" in
+  install)   cmd_install "$@" ;;
+  init)      cmd_init "$@" ;;
+  lang)      cmd_lang "$@" ;;
+  doctor)    cmd_doctor "$@" ;;
+  uninstall) cmd_uninstall "$@" ;;
+  version|--version) say "klaus $KLAUS_VERSION" ;;
+  ""|help)   usage ;;
+  *)         die "unknown command: $cmd  (try: klaus --help)" ;;
+esac
