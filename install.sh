@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Bootstrap installer for klaus.
 #
-#   curl -fsSL https://raw.githubusercontent.com/<you>/klaus/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/chinmaypandya/klaus/main/install.sh | bash
 #
 # Clones (or updates) the repo into ~/.klaus, installs the global Claude Code
 # setup into ~/.claude, and puts the `klaus` command on your PATH.
@@ -15,7 +15,7 @@
 
 set -euo pipefail
 
-KLAUS_REPO="${KLAUS_REPO:-https://github.com/<you>/klaus.git}"
+KLAUS_REPO="${KLAUS_REPO:-https://github.com/chinmaypandya/klaus.git}"
 KLAUS_HOME="${KLAUS_HOME:-$HOME/.klaus}"
 KLAUS_BIN="${KLAUS_BIN:-$HOME/.local/bin}"
 KLAUS_REF="${KLAUS_REF:-main}"
