@@ -5,7 +5,7 @@ machine**. Your repos hold their own specs, plans and journal — never a copy o
 your rules.
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/<you>/klaus/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/chinmaypandya/klaus/main/install.sh | bash
 ```
 
 Then, in any repository:
@@ -41,10 +41,10 @@ tasks, one task at a time — with tests and docs — before the next.
 
 ```bash
 # one-liner (clones to ~/.klaus, symlinks `klaus` into ~/.local/bin)
-curl -fsSL https://raw.githubusercontent.com/<you>/klaus/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/chinmaypandya/klaus/main/install.sh | bash
 
 # or from a clone
-git clone https://github.com/<you>/klaus ~/.klaus
+git clone https://github.com/chinmaypandya/klaus ~/.klaus
 bash ~/.klaus/install.sh
 
 # or from an unpacked zip, from inside the directory
