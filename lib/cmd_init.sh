@@ -5,7 +5,7 @@ cmd_init() {
   local force="skip" target="."
   while [ $# -gt 0 ]; do
     case "$1" in
-      --force) force=force ;;
+      --force) force="force" ;;
       -*) die "init: unknown option $1" ;;
       *) target="$1" ;;
     esac

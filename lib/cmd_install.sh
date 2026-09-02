@@ -5,8 +5,8 @@ cmd_install() {
   local mode="copy" root dest backup stamp
   while [ $# -gt 0 ]; do
     case "$1" in
-      --link) mode=link ;;
-      --copy) mode=copy ;;
+      --link) mode="link" ;;
+      --copy) mode="copy" ;;
       *) die "install: unknown option $1" ;;
     esac
     shift
