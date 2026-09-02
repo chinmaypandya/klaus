@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # klaus — a structured workflow for Claude Code, configured once per machine.
-# https://github.com/<you>/klaus
+# https://github.com/chinmaypandya/klaus
 
 set -euo pipefail
 
