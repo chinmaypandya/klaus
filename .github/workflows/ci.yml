@@ -18,6 +18,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: provide permissions
+        run: chmod +x bin/klaus install.sh scripts/validate.py
+
       - name: shellcheck
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
@@ -47,6 +50,10 @@ jobs:
         os: [ubuntu-latest, macos-latest]
     steps:
       - uses: actions/checkout@v4
+
+      - name: fix permissions
+        run: chmod +x bin/klaus install.sh scripts/validate.py
+
       - name: install into a scratch config dir
         env:
           CLAUDE_CONFIG_DIR: ${{ runner.temp }}/claude
@@ -54,6 +61,7 @@ jobs:
           ./bin/klaus install --copy
           ./bin/klaus doctor
           ./bin/klaus lang go
+
       - name: scaffold a scratch repo
         env:
           CLAUDE_CONFIG_DIR: ${{ runner.temp }}/claude

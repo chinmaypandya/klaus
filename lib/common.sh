@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Shared helpers. Sourced by bin/klaus; not executable on its own.
 
+# shellcheck disable=SC2034  # read by bin/klaus, which sources this file
 KLAUS_VERSION="0.1.0"
 
 # Colours only when attached to a terminal.

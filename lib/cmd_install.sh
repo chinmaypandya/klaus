@@ -2,7 +2,7 @@
 # klaus install — write the global setup into ~/.claude
 
 cmd_install() {
-  local mode=copy root dest backup stamp
+  local mode="copy" root dest backup stamp
   while [ $# -gt 0 ]; do
     case "$1" in
       --link) mode=link ;;

@@ -14,6 +14,7 @@ LIB="$(cd -P "$(dirname "$_self")/../lib" && pwd)"
 
 # shellcheck source=lib/common.sh
 . "$LIB/common.sh"
+# shellcheck source=/dev/null
 for f in "$LIB"/cmd_*.sh; do . "$f"; done
 
 usage() {
@@ -73,7 +74,7 @@ export DRY_RUN ASSUME_YES
 
 set -- "${args[@]:-}"
 cmd="${1:-}"
-[ $# -gt 0 ] && shift || true
+if [ $# -gt 0 ]; then shift; fi
 
 case "$cmd" in
   install)   cmd_install "$@" ;;

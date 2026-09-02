@@ -2,7 +2,7 @@
 # klaus init — scaffold the project-side artifacts in the current repo
 
 cmd_init() {
-  local force=skip target="."
+  local force="skip" target="."
   while [ $# -gt 0 ]; do
     case "$1" in
       --force) force=force ;;
