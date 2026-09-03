@@ -9,17 +9,28 @@ disable-model-invocation: true
 
 Feature: `$0`. Problem statement: `$ARGUMENTS`.
 
-Write to `docs/specs/$0/requirements.md`. If the directory exists, read the
-current file first and amend it rather than overwriting.
+This is the same phase `/klaus` runs automatically — invoke this directly only
+to jump straight into requirements without going through `/klaus`'s
+new-vs-continuing detection. Both read and write the same files, so switching
+between the two mid-feature is always safe.
 
 ## How to run this phase
 
-1. Restate the problem in one sentence. If you cannot, ask for the missing piece
-   and stop.
-2. Draft the document below.
-3. Ask me at most three questions, one at a time, about anything that would
-   change the shape of the solution. Do not ask about things you can default.
-4. When I confirm, write the file and stop. Do not proceed to design.
+Track everything in `docs/specs/$0/requirements-qa.md` (shape:
+`docs/specs/_templates/requirements-qa.md` if present, else the format
+embedded in `~/.claude/skills/klaus/SKILL.md`). One question live at a time:
+
+1. If `requirements-qa.md` doesn't exist yet, create it and add a first
+   question from the problem statement.
+2. Read the file top to bottom. Find the first `pending` question, ask
+   exactly that, and stop. Never bundle a second question into the same
+   message.
+3. On an answer: record it in my own words, flip status to `answered`, then
+   immediately check for the next gap — cover at minimum actors, the core
+   behaviour walked through step by step, in/out/later scope, and what "done"
+   looks like — before asking the next question or closing the phase.
+4. When every question is answered or explicitly skipped with a reason, write
+   `requirements.md` from the file and stop. Do not proceed to design.
 
 Do not write code, class names, or file layouts in this phase.
 
@@ -96,6 +107,11 @@ If the feature is non-trivial, delegate this sweep to the `edge-case-hunter`
 subagent and merge its findings.
 
 ## Finish
+
+If `docs/specs/$0/state.md` exists, update it: phase → `lld`, status →
+`in-progress`. If it doesn't exist (this phase was invoked standalone, not
+via `/klaus`), don't create one — that file is `/klaus`'s bookkeeping, not
+required for manual use.
 
 End with: the requirement count, the count of unconfirmed edge cases, and the
 single sentence `Next: /lld $0`.

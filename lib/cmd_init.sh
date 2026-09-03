@@ -34,8 +34,11 @@ cmd_init() {
   # is copied here — that is the whole point of the split.
   head1 "Next"
   cat <<'MSG'
-  Start a feature:   /spec <feature-slug> <one-line problem statement>
-  Then in order:     /lld <slug> → /hld <slug> → /plan <slug> → /implement <slug> T1
+  In Claude Code, just say what you want:   /klaus let's build <feature>
+  It detects new vs. continuing work and drives requirements → LLD → HLD →
+  plan → implement automatically, one step at a time.
+
+  To jump into one phase directly instead: /spec, /lld, /hld, /plan, /implement.
 
   Edit docs/conventions.md only for rules unique to THIS repo. Anything reusable
   belongs in ~/.claude/standards/.

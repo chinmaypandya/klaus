@@ -71,3 +71,5 @@ jobs:
           "$GITHUB_WORKSPACE/bin/klaus" init
           test -f docs/journal.md
           test -f docs/specs/_templates/lld.md
+          test -f docs/specs/_templates/state.md
+          test -f docs/specs/_templates/requirements-qa.md

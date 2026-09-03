@@ -6,23 +6,32 @@ these rules.
 
 ## How I work
 
-I work **one problem statement at a time**, in phases. Do not run ahead of the
-current phase, and do not start the next one until I say so.
+Talk to `/klaus`. It reads `docs/specs/*/state.md` to figure out whether a
+request is new work or a continuation, resumes at the right phase without
+re-asking what's already settled, and drives everything one small step at a
+time — one question, one design confirmation, or one implemented task per
+turn, never more.
 
-| Phase | Skill | Output |
+| Phase | State | Tracked in |
 |---|---|---|
-| 1. Requirements | `/spec` | `docs/specs/<feature>/requirements.md` |
-| 2. Low-level design | `/lld` | `docs/specs/<feature>/lld.md` |
-| 3. High-level design | `/hld` | `docs/specs/<feature>/hld.md` |
-| 4. Task breakdown | `/plan` | `docs/specs/<feature>/plan.md` |
-| 5. Build, one task | `/implement` | code + docs + tests, one task only |
-| 6. Record | `/journal` | `docs/journal.md` or a changie entry |
+| 1. Requirements | one Q&A question at a time | `requirements-qa.md` → `requirements.md` |
+| 2. Low-level design | entities, then class design | `lld-qa.md` → `lld.md` |
+| 3. High-level design | only if it applies | `hld-qa.md` → `hld.md` |
+| 4. Task breakdown | one confirmation | `plan.md` |
+| 5. Build, one task | test → code → docs → lint → commit | `plan.md`, `journal.md`, `CHANGELOG.md` |
 
-Not every feature needs every phase. A bug fix may go straight to `/plan`. A new
-service needs all six. Ask me which phases apply if it isn't obvious.
+Not every feature needs every phase — a bug fix may resume straight into
+`plan`. `/klaus` decides this from the request and the state file; ask only
+when it genuinely can't tell.
 
-**Stop-and-ask beats guess-and-build.** If a requirement is ambiguous, ask.
-If an edge case is undefined, list it and ask. One question at a time.
+The individual `/spec`, `/lld`, `/hld`, `/plan`, `/implement`, `/journal`
+skills still exist as a manual override, for jumping into one phase directly.
+Both paths read and write the same files, so switching between them mid-feature
+is always safe.
+
+**Stop-and-ask beats guess-and-build.** If a requirement is ambiguous, ask —
+one question, wait for the answer, then continue. Never bundle several
+questions into one message.
 
 ## Before writing any code
 
@@ -51,13 +60,14 @@ If neither of the first two exists for the language, say so and offer to run
 
 ## Non-negotiables per unit of work
 
-A task is not done until all three exist:
+A task is not done until all four exist:
 
 1. The code
 2. Its documentation (see `~/.claude/rules/20-documentation.md`)
 3. Its tests, passing (see `~/.claude/rules/30-testing.md`)
+4. A commit scoped to just this task, plus a journal entry
 
-Do not move to the next task with any of the three missing.
+Do not move to the next task with any of the four missing.
 
 ## Project artifacts
 

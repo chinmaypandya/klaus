@@ -15,14 +15,6 @@ klaus init
 claude
 ```
 
-```
-/spec payment-retry  "retries duplicate charges on gateway timeout"
-/lld payment-retry
-/hld payment-retry
-/plan payment-retry
-/implement payment-retry T1
-```
-
 ---
 
 ## What problem this solves
@@ -76,21 +68,37 @@ Restart Claude Code afterwards — a running session will not see new directorie
 
 ## The workflow
 
-| Command | Produces | Contains |
+`/klaus` is the front door. Talk to it — "let's build X", "keep going on Y" —
+and it does three things every single turn: figures out what phase the
+feature is in by reading `docs/specs/<slug>/state.md`, does exactly one small
+unit of that phase's work, then updates the tracking file and stops.
+
+| Phase | Tracked in | One turn does |
 |---|---|---|
-| `/spec <slug> <problem>` | `requirements.md` | in / out / later scope, edge case sweep, acceptance criteria |
-| `/lld <slug>` | `lld.md` | entities and relationships → class design (signatures only) → DSA fit → traces |
-| `/hld <slug>` | `hld.md` | network, storage, concurrency, caching, security, failure, observability |
-| `/plan <slug>` | `plan.md` | ordered tasks, each with a definition of done |
-| `/implement <slug> <task>` | code | one task: tests first, then code, then docs — then it stops |
-| `/journal <what>` | `journal.md` | what, why this shape, watch out for, refs |
-| `/conventions [lang]` | — | resolve, show, or bootstrap a standards file |
-| `/ship [ci\|release]` | workflows | GitHub Actions for CI and for versioned releases |
+| Requirements | `requirements-qa.md` → `requirements.md` | Ask one question, record the answer, or close the phase |
+| Low-level design | `lld-qa.md` → `lld.md` | One entity/class question, or the DSA-fit pass, or close the phase |
+| High-level design | `hld-qa.md` → `hld.md` | Skipped for simple features; one question at a time when it applies |
+| Task breakdown | `plan.md` | Generate the task table, confirm, done |
+| Implementation | `plan.md`, `journal.md`, `CHANGELOG.md` | One task: failing test → code → docs → lint → **scoped commit** |
 
-The six phase skills carry `disable-model-invocation: true`, so Claude can never
-start a phase on its own. You drive every transition.
+**Nothing is asked twice.** Resuming a feature — even in a brand-new
+conversation — reads `state.md`, reports one line of status ("resuming
+`connect-4`, requirements phase, 3 of 5 questions answered"), and continues
+straight from the resume pointer. Re-reading the file top to bottom, never
+trusting the pointer blindly, is what keeps this safe against a hand-edit or
+a stale assumption.
 
-Not every feature needs every phase. A bug fix can go straight to `/plan`.
+**Manual overrides still exist** — `/spec`, `/lld`, `/hld`, `/plan`,
+`/implement`, plus `/conventions` and `/ship` for the supporting pieces. Use
+one directly to jump straight into a phase without going through `/klaus`'s
+detection. Both paths read and write the exact same files, so switching
+between `/klaus` and a direct command mid-feature is always safe. Every phase
+skill carries `disable-model-invocation: true`, so Claude never starts one on
+its own initiative — only `/klaus` or you do.
+
+Not every feature needs every phase — a bug fix might resume straight into
+`plan`. `/klaus` decides this from the request; it only asks when it
+genuinely can't tell.
 
 ## What lives where, and when it loads
 
@@ -120,9 +128,12 @@ Python.
 │   └── specs/
 │       ├── _templates/             # edit these to change every future document
 │       └── <feature-slug>/
+│           ├── state.md            # phase, status, resume pointer
+│           ├── requirements-qa.md  # one question at a time
 │           ├── requirements.md
+│           ├── lld-qa.md
 │           ├── lld.md
-│           ├── hld.md
+│           ├── hld.md              # only if HLD applied
 │           └── plan.md
 └── .claude/                        # optional, project-scoped settings and rules
 ```
@@ -151,13 +162,15 @@ will show up in your code.
 
 ## The two subagents
 
-- **`edge-case-hunter`** — read-only, used during `/spec`. Seven lenses (input
+- **`edge-case-hunter`** — read-only, used during the requirements phase 
+  (via `/klaus` or `/spec` directly)..   Seven lenses (input
   space, cardinality, time and ordering, concurrency, failure, authorisation,
   lifecycle), returns a ranked table capped at 15 rows so it stays specific to
   your system rather than generic.
-- **`convention-reviewer`** — read-only, run after `/implement`. Reviews the diff
-  against your standards. It flags over-engineering as loudly as omissions,
-  which is the failure mode that matters when applying SOLID gradually.
+- **`convention-reviewer`** — read-only, worth running after any implementation step.
+  Reviews the diff against your standards. It flags over-engineering as 
+  loudly as omissions, which is the failure mode that matters when 
+  applying SOLID gradually.
 
 Two is deliberate. Subagent descriptions cost context in every session.
 

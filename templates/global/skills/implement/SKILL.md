@@ -7,7 +7,8 @@ disable-model-invocation: true
 
 # Phase 5 — Implement one task
 
-Feature `$0`, task `$1`.
+Feature `$0`, task `$1`. Same phase `/klaus` runs automatically, one task per
+turn either way.
 
 ## Before writing anything
 
@@ -35,18 +36,33 @@ build it.
    conventions file. Module header if this is a new module.
 4. **Run the whole suite**, not just the new tests. Report the real output.
 5. **Format and lint** using the project's commands.
+6. **Commit.** Stage only the files this task touched — check `git status`
+   first and never `git add -A` blind. Message: `$1: <short imperative
+   summary>`, with a body if the reason isn't obvious from the diff alone.
+   A task can be more than one commit (e.g. failing test as one, the
+   implementation as a second) — several small honest commits beat one that
+   bundles the whole task together, as long as each one leaves the tree in a
+   state that at least compiles.
 
 ## Then stop
 
 Update these in the same turn:
 - `plan.md`: set task status to `done`, tick the definition-of-done boxes.
-- Journal: run the `/journal` steps for this task.
+- Journal: same four fields `/journal` uses (what, why this shape, watch out
+  for, refs) — append directly, no need to invoke `/journal` separately.
+- Changelog: only if the change is user-visible. Via changie if
+  `.changie.yaml` exists, else append under `[Unreleased]` in
+  `CHANGELOG.md`, Keep-a-Changelog format.
+- If `docs/specs/$0/state.md` exists: resume pointer → next task ID, or
+  phase → `done` if `$1` was the last task in `plan.md`.
 
 Report:
 - Files added and changed, one line each.
 - Test results: counts, and the names of anything skipped.
+- Commit(s) made, with their messages.
 - Anything you noticed that belongs in a later task — as a note, not a fix.
-- `Next: /implement $0 <next-task-id>`
+- `Next: /implement $0 <next-task-id>`, or `/klaus` if this feature is being
+  driven through the orchestrator.
 
 **Do not start the next task.** Do not fix unrelated things you noticed. Do not
 refactor code you did not touch. If something outside the task is broken, say so

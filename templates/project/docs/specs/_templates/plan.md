@@ -25,7 +25,9 @@ This table is the single source of truth for what is finished.
 - [ ] Doc comments on every public member
 - [ ] Tests: happy path plus edge cases E1, E4
 - [ ] Full suite passes
+- [ ] Linter clean
+- [ ] Committed (scoped to this task's files only)
 - [ ] plan.md status updated
-- [ ] Journal entry added
+- [ ] Journal entry added; changelog entry if user-visible
 
 **Out of scope for this task:** what a reader would wrongly assume is included.

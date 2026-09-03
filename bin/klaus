@@ -45,14 +45,19 @@ ${C_BLD}TYPICAL FIRST RUN${C_OFF}
   klaus install --link      # once per machine
   cd ~/code/my-project
   klaus init                # once per repo
-  claude                    # then /spec, /lld, /hld, /plan, /implement
+  claude                    # then: /klaus let's build <feature>
 
 ${C_BLD}THE WORKFLOW${C_OFF}
+  /klaus <what you want>    the orchestrator — detects new vs. continuing work,
+                            resumes at the right phase, drives everything
+                            forward one question or one task at a time
+
+  Manual overrides, for jumping into one phase directly:
   /spec <slug> <problem>    requirements: in / out / later scope, edge cases
   /lld <slug>               entities → classes → DSA fit → traces
   /hld <slug>               network, storage, concurrency, cache, security
   /plan <slug>              ordered tasks, each with a definition of done
-  /implement <slug> <task>  one task, with docs and tests, then stops
+  /implement <slug> <task>  one task: test, code, docs, lint, commit — then stops
   /journal <what>           journal entry, plus a changie entry if configured
   /conventions [language]   resolve, show or bootstrap a standards file
   /ship [ci|release|both]   set up or review the GitHub Actions pipelines

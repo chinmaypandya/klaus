@@ -8,7 +8,8 @@ disable-model-invocation: true
 # Phase 4 — Task breakdown
 
 Feature: `$0`. Read `docs/specs/$0/requirements.md` and `lld.md` (and `hld.md`
-if present). Write to `docs/specs/$0/plan.md`.
+if present). Write to `docs/specs/$0/plan.md`. Same phase `/klaus` runs
+automatically, minus its one confirmation message.
 
 ## What makes a good task here
 
@@ -60,8 +61,10 @@ Status is one of: todo, in-progress, done, blocked.
 - [ ] Doc comments on every public member
 - [ ] Unit tests: happy path + edge cases E1, E4
 - [ ] Full suite passes
+- [ ] Formatter and linter run clean
+- [ ] Committed (scoped to this task's files, not a blanket add)
 - [ ] `plan.md` status updated
-- [ ] Journal entry added
+- [ ] Journal entry added; changelog entry if user-visible
 
 **Out of scope for this task:** the things a reader would assume are included.
 ```
@@ -75,5 +78,8 @@ Status is one of: todo, in-progress, done, blocked.
   the feature should have been split at the requirements stage — say so.
 
 ## Finish
+
+If `docs/specs/$0/state.md` exists, update it: phase → `implement`, resume
+pointer → the first task ID.
 
 End with: the task count, the critical path, and `Next: /implement $0 T1`.

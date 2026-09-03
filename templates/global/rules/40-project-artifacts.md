@@ -15,9 +15,13 @@ project.
 │   │   └── ADR-0001-<slug>.md
 │   └── specs/
 │       └── <feature-slug>/
-│           ├── requirements.md
+│           ├── state.md            # phase, status, resume pointer — /klaus reads this first
+│           ├── requirements-qa.md  # one question at a time, updated in place
+│           ├── requirements.md     # written when the Q&A closes
+│           ├── lld-qa.md
 │           ├── lld.md
-│           ├── hld.md              # only when there's a system to design
+│           ├── hld-qa.md           # only when HLD applies
+│           ├── hld.md
 │           └── plan.md             # the task list, with status
 └── .claude/
     ├── settings.json               # optional, project-scoped, committed
@@ -26,8 +30,11 @@ project.
 
 ## Rules
 - `<feature-slug>` is kebab-case and stable. Never rename it mid-flight.
-- `plan.md` is the single source of truth for what is done. Update it in the
-  same change that completes a task — never in a separate cleanup pass.
+- `state.md` is the single source of truth for what phase a feature is in.
+  `plan.md` is the single source of truth for which tasks are done. Update the
+  relevant one in the same turn that changes it — never in a separate pass.
+- A `*-qa.md` file is append-only. A question that becomes irrelevant is
+  marked `skipped` with a reason, never deleted — the record of why matters.
 - An ADR is written when a decision closes off an alternative a future developer
   would reasonably reach for. Not for every choice.
 - A repo-level `.claude/rules/` file is for things true only of this repo (a

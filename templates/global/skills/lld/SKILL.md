@@ -10,16 +10,19 @@ disable-model-invocation: true
 Feature: `$0`. Read `docs/specs/$0/requirements.md` first. If it is missing, stop
 and tell me to run `/spec` instead.
 
-Write to `docs/specs/$0/lld.md`.
+Write to `docs/specs/$0/lld.md`. This is the same phase `/klaus` runs
+automatically — invoke this directly only to jump straight into LLD.
 
 **Signatures only in this phase.** Attributes, method names, parameters, return
 types, visibility. No method bodies. No implementation.
 
 ## Order of work
 
-Do these in order and show me each before moving on.
+Track ambiguities in `docs/specs/$0/lld-qa.md`, one question live at a time —
+same mechanic as `/spec`. Two stages, `entities` then `class-design`; finish
+every entities question before opening a class-design one.
 
-### Step 1 — Entities and relationships
+### Stage 1 — Entities and relationships
 Identify the nouns in the requirements that carry state or identity. For each:
 what it is, what identifies it, what state it owns, what invariants must always
 hold. Then the relationships between them, with cardinality and ownership.
@@ -27,9 +30,13 @@ hold. Then the relationships between them, with cardinality and ownership.
 Distinguish entities (have identity, mutable) from value objects (no identity,
 immutable) explicitly — this decision drives most of the class design.
 
-Draw the relationships as a Mermaid class diagram.
+Draw the relationships as a Mermaid class diagram. Ask about anything genuinely
+ambiguous one at a time via `lld-qa.md`; default and move on for anything with
+an obvious answer. When settled, present the diagram and get explicit
+confirmation before stage 2 — record that confirmation as an answered question,
+not a silent assumption.
 
-### Step 2 — Class design
+### Stage 2 — Class design
 For each class: responsibility in one sentence, then attributes, then public
 methods, then private methods. Signatures only.
 
@@ -46,8 +53,7 @@ principle and the pressure. Do not apply all five.
 Use generics only where two concrete variants exist in the requirements, and
 bound the parameter. State the bound and why it is that bound.
 
-### Step 3 — DSA fit
-For each method whose behaviour is more than a straight-line call, ask what data
+### Step 3 — DSA fit (not a Q&A stage — run this yourself, confirm the table)
 structure or algorithm actually fits, and justify it against the expected input
 size from the requirements.
 
@@ -87,6 +93,9 @@ instead of the outline here. The repo's template wins.
 ```
 
 ## Finish
+
+If `docs/specs/$0/state.md` exists, update it: phase → `hld`, resume pointer
+cleared.
 
 End with: which requirement IDs are covered, which are not yet, and either
 `Next: /hld $0` (if there is a system around this) or `Next: /plan $0`.

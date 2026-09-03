@@ -8,7 +8,16 @@ disable-model-invocation: true
 # Phase 3 — High-level design
 
 Feature: `$0`. Read `docs/specs/$0/requirements.md`, and `lld.md` if it exists.
-Write to `docs/specs/$0/hld.md`.
+Write to `docs/specs/$0/hld.md`. This is the same phase `/klaus` runs
+automatically — via `/klaus` it's gated by one question first (does this
+feature genuinely involve more than one process, service, or datastore); a
+direct `/hld` invocation skips that gate since you've already decided this
+phase applies.
+
+If any answer below is a genuine open question rather than something you can
+default, track it in `docs/specs/$0/hld-qa.md` one at a time, same mechanic as
+`/spec` — ask, wait, record, continue. Most of this phase should be you
+proposing the simplest answer and confirming, not asking.
 
 ## The rule for this phase
 
@@ -88,5 +97,7 @@ If `docs/specs/_templates/hld.md` exists in this repo, use it as the shape
 instead of the outline here. The repo's template wins.
 
 ## Finish
+
+If `docs/specs/$0/state.md` exists, update it: phase → `plan`.
 
 End with: the count of sections answered vs. marked N/A, and `Next: /plan $0`.
